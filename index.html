@@ -661,9 +661,6 @@ document.getElementById("generatePDF").addEventListener("click", () => {
     const element = document.body;
     const auftragsID = document.getElementById("auftrag_id").value || "Reparaturauftrag";
     
-
-    
-    
 const opt = {
     margin: 0,
     filename: auftragsID + '.pdf',
@@ -672,8 +669,8 @@ const opt = {
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
 };
-
-$1opt).from(opt).from(element).save();
+    
+    html2pdf().set(opt).from(element).save();
 });
 </script><script>
 function berechneDauer() {
