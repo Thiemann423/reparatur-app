@@ -1,35 +1,33 @@
 
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reparaturauftrag</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Reparatur-App">
+<meta charset="utf-8"/>
+<title>Reparaturauftrag</title>
 </head>
 <body>
-  <h1>Reparaturauftrag</h1>
-  <label>Auftrags-ID:</label>
-  <input id="auftragId" value="REP-20250605-TEST" /><br><br>
-  <button id="exportButton">Auftrag abschließen & als PDF speichern</button>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
-  <script>
-    document.getElementById("exportButton").addEventListener("click", () => {
-      const element = document.body;
-      var opt = {
-        margin: 0.5,
-        filename: document.getElementById("auftragId").value + '.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-      };
-      html2pdf().set(opt).from(element).save();
-    });
-  </script>
-</body>
+<h1>Reparaturauftrag</h1>
+<label>Auftrags-ID:</label>
+<input id="auftragId" value="REP-20250605-TEST"/><br/>
+<label>Techniker:</label>
+<input id="techniker" value="Mustertechniker"/><br/>
+<label>Dauer der Reparatur:</label>
+<input id="dauer" value="1.5"/><br/>
+<label>Fehlerbeschreibung:</label>
+<textarea id="fehler">Fehlerbeschreibung Beispieltext</textarea><br/>
+<button id="exportButton">Auftrag abschließen &amp; als PDF speichern</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script><script>
+document.getElementById("exportButton").addEventListener("click", () => {
+  const element = document.body;
+  var opt = {
+    margin: 0.5,
+    filename: document.getElementById("auftragId").value + '.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+  };
+  html2pdf().set(opt).from(element).save();
+});
+</script></body>
 </html>
