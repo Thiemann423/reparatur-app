@@ -1,10 +1,11 @@
 
-const CACHE_NAME = 'reparatur-app-cache-v1';
+const CACHE_NAME = 'reparatur-app-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon.png'
+  '/icon.png',
+  '/service-worker.js'
 ];
 
 // Beim Installieren direkt alle Dateien cachen
@@ -32,8 +33,15 @@ self.addEventListener('activate', function(event) {
   );
 });
 
-// Fetch: immer zuerst online versuchen, dann Fallback auf Cache
+// Fetch: PDF-Bibliotheken nie cachen, immer aus Netz laden
 self.addEventListener('fetch', function(event) {
+  const requestUrl = new URL(event.request.url);
+
+  // Prüfen ob es sich um pdf-Bibliotheken handelt
+  if (requestUrl.href.includes('html2pdf') || requestUrl.href.includes('html2canvas') || requestUrl.href.includes('jspdf')) {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then(function(response) {
