@@ -661,6 +661,9 @@ document.getElementById("generatePDF").addEventListener("click", () => {
     const element = document.body;
     const auftragsID = document.getElementById("auftrag_id").value || "Reparaturauftrag";
     
+
+    
+    
 const opt = {
     margin: 0,
     filename: auftragsID + '.pdf',
@@ -669,8 +672,8 @@ const opt = {
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
 };
-    
-    html2pdf().set(opt).from(element).save();
+
+$1opt).from(opt).from(element).save();
 });
 </script><script>
 function berechneDauer() {
@@ -700,4 +703,23 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-</div></body></html>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').then(reg => {
+    reg.onupdatefound = () => {
+      const newWorker = reg.installing;
+      newWorker.onstatechange = () => {
+        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+          if (confirm("Eine neue Version ist verfügbar. Jetzt aktualisieren?")) {
+            newWorker.postMessage('skipWaiting');
+            window.location.reload();
+          }
+        }
+      };
+    };
+  });
+}
+</script>
+
+</body></html>
