@@ -7,7 +7,7 @@
 <link href="icon-192.png" rel="apple-touch-icon"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>TE 15 Reparaturauftrag 04</title>
+<title>TE 15 Reparaturauftrag 03</title>
 <style>
         body {
             font-family: Arial, sans-serif;
@@ -705,12 +705,20 @@ if ('serviceWorker' in navigator) {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('service-worker.js').then(reg => {
     if (localStorage.getItem('version-notice-shown') !== 'true') {
-      const div = document.createElement('div');
-      div.textContent = 'Neue Version wurde geladen.';
-      div.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#222;color:#fff;padding:8px 12px;border-radius:8px;z-index:10000;font-size:14px;';
-      document.body.appendChild(div);
-      setTimeout(() => div.remove(), 4000);
-      localStorage.setItem('version-notice-shown', 'true');
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);display:flex;justify-content:center;align-items:center;z-index:9999;';
+
+      const box = document.createElement('div');
+      box.style.cssText = 'background:#fff;padding:20px 30px;border-radius:10px;font-size:16px;box-shadow:0 0 10px rgba(0,0,0,0.2);text-align:center;';
+      box.innerHTML = '<p>Neue Version wurde geladen.</p><button style="margin-top:10px;padding:6px 16px;font-size:15px;border:none;background:#007BFF;color:white;border-radius:5px;cursor:pointer;">OK</button>';
+
+      overlay.appendChild(box);
+      document.body.appendChild(overlay);
+
+      box.querySelector('button').addEventListener('click', () => {
+        localStorage.setItem('version-notice-shown', 'true');
+        overlay.remove();
+      });
     }
   });
 }
