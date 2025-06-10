@@ -39,8 +39,45 @@
             margin-bottom: 20px;
         }
     </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script><link href="manifest.json" rel="manifest"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black" name="apple-mobile-web-app-status-bar-style"/><meta content="Reparatur-App" name="apple-mobile-web-app-title"/></head>
-<body><div id="pdfExportContainer">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script><link href="manifest.json" rel="manifest"/><meta content="yes" name="apple-mobile-web-app-capable"/><meta content="black" name="apple-mobile-web-app-status-bar-style"/><meta content="Reparatur-App" name="apple-mobile-web-app-title"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+async function generatePDFAndFinish() {
+  const formElement = document.getElementById('auftragForm');
+  const canvas = await html2canvas(formElement);
+  const imgData = canvas.toDataURL('image/png');
+
+  const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+  const imgProps = pdf.getImageProperties(imgData);
+  const ratio = imgProps.width / imgProps.height;
+  const pdfHeight = pageWidth / ratio;
+
+  pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pdfHeight);
+  pdf.save('auftrag.pdf');
+
+  // Formular ausblenden, Abschlussanzeige zeigen
+  formElement.style.display = 'none';
+  document.getElementById('abschlussScreen').style.display = 'flex';
+  localStorage.setItem('auftrag_abgeschlossen', 'true');
+}
+
+function resetFormular() {
+  localStorage.removeItem('auftrag_abgeschlossen');
+  location.reload();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('auftrag_abgeschlossen') === 'true') {
+    document.getElementById('auftragForm').style.display = 'none';
+    document.getElementById('abschlussScreen').style.display = 'flex';
+  }
+});
+</script>
+</head>
+<body><div id="abschlussScreen" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:white;align-items:center;justify-content:center;flex-direction:column;font-size:20px;font-family:sans-serif;z-index:999;"><p>✅ Auftrag wurde abgeschlossen.</p><button onclick="generatePDFAndFinish();resetFormular()" style="margin-top:20px;padding:10px 20px;font-size:16px;background:#007BFF;color:white;border:none;border-radius:6px;">Neuen Auftrag starten</button></div><div id="pdfExportContainer">
 <div style="margin-bottom: 12px;">
 <label for="auftrag_id" style="display: block; font-weight: bold;">Auftrags-ID:</label>
 <input id="auftrag_id" name="auftrag_id" readonly="" style="padding: 6px; width: 100%;" type="text"/>
@@ -274,7 +311,7 @@
 </div>
 <div class="section">
 <label for="unterschrift_abnahme">Unterschrift MA Abnahme (Produktkreisfreigabe):</label>
-<canvas class="signature-pad" id="unterschrift_abnahme"></canvas><button onclick="clearSignature(0)" style="margin-top: 8px; display: block;" type="button">Unterschrift löschen</button>
+<canvas class="signature-pad" id="unterschrift_abnahme"></canvas><button onclick="generatePDFAndFinish();clearSignature(0)" style="margin-top: 8px; display: block;" type="button">Unterschrift löschen</button>
 </div>
 <div class="section">
 <label for="unterschrift_technik">Unterschrift MA Technik:</label>
@@ -342,7 +379,7 @@
         fileInput.value = '';
     });
 </script>
-<img id="fotoPreview" style="max-width: 100%; display: none; border: 1px solid #ccc; margin-top: 10px;"/></div><button onclick="clearSignature(1)" style="margin-top: 8px; display: block;" type="button">Unterschrift löschen</button>
+<img id="fotoPreview" style="max-width: 100%; display: none; border: 1px solid #ccc; margin-top: 10px;"/></div><button onclick="generatePDFAndFinish();clearSignature(1)" style="margin-top: 8px; display: block;" type="button">Unterschrift löschen</button>
 </div>
 <div class="section">
 <label for="ort_datum">Ort / Datum:</label>
