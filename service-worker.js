@@ -1,18 +1,10 @@
 
-self.addEventListener('install', function(e) {
-  e.waitUntil(
-    caches.open('reparatur-app').then(function(cache) {
-      return cache.addAll([
-        './index.html',
-        './manifest.json'
-      ]);
-    })
-  );
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
 });
-self.addEventListener('fetch', function(e) {
-  e.respondWith(
-    caches.match(e.request).then(function(response) {
-      return response || fetch(e.request);
-    })
-  );
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+self.addEventListener('fetch', function(event) {
+  event.respondWith(fetch(event.request));
 });
