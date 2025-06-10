@@ -700,4 +700,20 @@ if ('serviceWorker' in navigator) {
   });
 }
 </script>
-</div></body></html>
+</div>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').then(reg => {
+    if (localStorage.getItem('version-notice-shown') !== 'true') {
+      const div = document.createElement('div');
+      div.textContent = 'Neue Version wurde geladen.';
+      div.style.cssText = 'position:fixed;bottom:10px;left:10px;background:#222;color:#fff;padding:8px 12px;border-radius:8px;z-index:10000;font-size:14px;';
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 4000);
+      localStorage.setItem('version-notice-shown', 'true');
+    }
+  });
+}
+</script>
+</body>
+</html>
